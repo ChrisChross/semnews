@@ -42,6 +42,36 @@ class ArticleKeyword(Base):
     def __repr__(self):
         return "%s / %s" % (self.slug, self.name)
 
+class Entity(Base):
+    __tablename__ = 'entities'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+
+    @classmethod
+    def get_or_create(self, name, session):
+        try:
+            return session.query(Entity).filter_by(name=name).one()
+        except NoResultFound:
+            print("Creating non-existing entity %s" % name)
+            result = Entity(name=name)
+            session.add(result)
+            session.commit()
+            return result
+
+class Statement(Base):
+    __tablename__ = 'statements'
+
+    id = Column(Integer, primary_key=True)
+    article_id = Column(Integer, ForeignKey('articles.id'), nullable=False)
+    subject_id = Column(Integer, ForeignKey('entities.id'), nullable=False)
+    predicate = Column(String)
+    object_id = Column(Integer, ForeignKey('entities.id'), nullable=False)
+
+    article = relationship('Article', backref='statements')
+    subject = relationship('Entity', foreign_keys=[subject_id])
+    object = relationship('Entity', foreign_keys=[object_id])
+
 engine = None
 session = None
 ledevoir = None

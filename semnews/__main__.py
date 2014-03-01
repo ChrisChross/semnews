@@ -13,6 +13,7 @@ class SemnewsCmd(cmd.Cmd):
 
     def preloop(self):
         db.opendb()
+        self.article = None
 
     def do_analyze(self, arg):
         """analyze <url>:
@@ -22,10 +23,30 @@ class SemnewsCmd(cmd.Cmd):
             a = get_article(arg)
         except ValueError:
             print("Invalid URL (Only Le Devoir articles supported for now).")
-        print("Parsing of \"%s\" successful" % a.title)
+        print("Now working on \"%s\"" % a.title)
         print("Author: %s" % a.author)
         print("Published at: %s" % a.publish_date)
         print("Keywords: %s" % a.keywords)
+        print("%d statements made about this article" % len(a.statements))
+        self.article = a
+
+    def do_state(self, arg):
+        """state:
+        Make a statement. You'll be prompted for an subject, a predicate, and an object.
+        """
+        if self.article is None:
+            print("No active article. Aborting.")
+            return
+        subject = input("Subject: ")
+        subject = db.Entity.get_or_create(subject, db.session)
+        predicate = input("Predicate: ")
+        object = input("Object: ")
+        object = db.Entity.get_or_create(object, db.session)
+        statement = db.Statement(
+            article=self.article, subject=subject, predicate=predicate, object=object
+        )
+        db.session.add(statement)
+        db.session.commit()
 
     def do_EOF(self, arg):
         print("Goodbye!")
