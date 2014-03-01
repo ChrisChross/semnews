@@ -1,4 +1,4 @@
-# Semantic annotation of news
+# Semantic annotation of news articles
 
 This program helps you annotate news article with [semantic triples][triples] such as
 `(Jean Charest, works_for, McCarthy Tétrault)` from articles like [these][jchired],
