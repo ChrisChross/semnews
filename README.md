@@ -20,7 +20,31 @@ better where to find data to feed the human detective with, thus making his job 
 
 I'm not sure at all where I'm heading with this, but I'm trying anyway.
 
+## Install & Run
+
+There's no installation process yet. To run the program, you have to download the source and run
+it from within the source tree. First, you need to install Python 3.3+, and then, you run:
+
+    $ git clone https://github.com/hsoft/semnews.git
+    $ cd semnews
+    $ ./bootstrap.sh
+    $ . env/bin/activate
+    $ python -m semnews
+
+A command prompt will start up, waiting for your commands.
+
+## Usage
+
+For now, the only thing we can do is to fetch and parse articles from [Le Devoir][ledevoir]. You can
+do so by typing `analyze <url>`. You'll get a message saying that parsing went ok (or not) and
+proving that by printing a bunch of metadata about that article.
+
+Note: We need to parse dates with french month names in them and for now, we use `strptime()` for
+this. This means that for date parting to work correctly, you need the `fr_CA.UTF-8` locale
+installed on your system.
+
 [triples]: http://en.wikipedia.org/wiki/Triplestore
 [jchired]: http://www.ledevoir.com/politique/quebec/368041/jean-charest-se-joint-a-un-cabinet-d-avocats
 [prbape]: http://www.ledevoir.com/politique/quebec/378975/l-ancien-president-du-bape-conseille-une-miniere
 [revolving]: http://en.wikipedia.org/wiki/Revolving_door_%28politics%29
+[ledevoir]: http://www.ledevoir.com/
